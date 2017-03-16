@@ -2,70 +2,50 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <stdio.h>
-
 #define SHMSZ     27
 
 main()
 {
-    char c;
-    int shmid;
+    int shmid,i;
     key_t key;
     char *shm, *s;
-
-    /*
-     * We'll name our shared memory segment
-     * "5678".
-     */
-    key = 5060;
-
-    /*
-     * Create the segment.
-     */
+    key = 1000;
     if ((shmid = shmget(key, SHMSZ, IPC_CREAT | 0666)) < 0) {
         perror("shmget");
         exit(1);
     }
-
-    /*
-     * Now we attach the segment to our data space.
-     */
     if ((shm = shmat(shmid, NULL, 0)) == (char *) -1) {
         perror("shmat");
         exit(1);
     }
-
-    /*
-     * Now put some things into the memory for the
-     * other process to read.
-     */
-    s = shm;
-	int i;
+	*shm = '!';
 	while(*shm!='*')
-	{
-		
-		char a[15];
-		printf("write something or * to end\n");
+	{		
+		char a[100];
+		printf("mesaage to send (*to end):");
 		gets(a);
 		if(a[0]!='*'){
-			s=++shm;
+			s = shm+1;
 			for (i=0;i<strlen(a);i++)
 				 *s++ = a[i];
 			*s = NULL;
 			*shm = '@';
-			while(*shm!='#')
-			{	
-				printf(".");
+
+			while(*shm!='#'&&*shm!='*')
 				sleep(1);
-			}
-			printf("client:");
-			for (s = ++shm; *s != NULL; s++)
-		    	putchar(*s);
-			putchar('\n');
+
+			if(*shm!='*'){
+				printf("client:");
+				for (s = shm+1; *s != NULL; s++)
+					putchar(*s);
+				putchar('\n');
+			}else
+			printf("connection closed by client");
 		}
 		else
 			*shm = '*';
 	}
-
+	shmid = shmdt(shm);
 
     exit(0);
 }
