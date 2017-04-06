@@ -36,7 +36,7 @@ main()
         printf("student_id: ");
         scanf("%d",&sid);
         printf("@student%d: ",sid);
-        sbuf.mtype = sid;
+        sbuf.mtype = 1;
         gets(a);       
      
         (void) strcpy(sbuf.mtext,a);
@@ -51,7 +51,7 @@ main()
             exit(1);
         }
 
-        if (msgrcv(msqid, &rbuf, MSGSZ, 2, 0) < 0) {
+        if (msgrcv(msqid, &rbuf, MSGSZ, sid+1, 0) < 0) {
             perror("msgrcv");
             exit(1);
         }
