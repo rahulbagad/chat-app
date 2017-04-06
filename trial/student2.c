@@ -26,12 +26,12 @@ main()
         exit(1);
     }
 
-    sbuf.mtype = 4;
+    sbuf.mtype = 2;
     char a[128];
     while(1)
     {
     
-	    if (msgrcv(msqid, &rbuf, MSGSZ, 2, 0) < 0) {
+	    if (msgrcv(msqid, &rbuf, MSGSZ, 1, 0) < 0) {
 	        perror("msgrcv");
 	        exit(1);
 	    }
