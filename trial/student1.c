@@ -31,10 +31,11 @@ main()
     while(1)
     {
     
-	    if (msgrcv(msqid, &rbuf, MSGSZ, 1, 0) < 0) {
+	if (msgrcv(msqid, &rbuf, MSGSZ, 1, 0) < 0) 
+	{
 	        perror("msgrcv");
 	        exit(1);
-	    }
+	}
 
     	printf("server: %s\n", rbuf.mtext);
 
